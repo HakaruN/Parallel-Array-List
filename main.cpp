@@ -1,3 +1,4 @@
+#include "include/glfw3.h"
 #include "include/ParaSphereStruc.h"
 #include "include/sphere.h"
 
@@ -15,7 +16,9 @@
 using namespace std;
 int main()
 {
-    ParaSphereStruc spheres(1000);
+    unsigned long nSpheres = 1000;
+    ParaSphereStruc spheres(nSpheres);
+
     /*  Data structure testing stuff
     vec1Pal<float> vec1s(10);
     vec2Pal<float> vec2s(10);
@@ -63,7 +66,7 @@ int main()
 
 
     std::srand(std::time(nullptr));
-    for(unsigned short s = 0; s < 20; s++)
+    for(unsigned short s = 0; s < nSpheres; s++)
     {
         vec3<float> pos(//generate random positions for each sphere with a range between -10 and 10
         (float)std::rand()/(RAND_MAX + 1u) * 20 - 10,
@@ -84,11 +87,9 @@ int main()
         spheres.addItem(pos, colour, radius);
 
 
-
-
     }
 
-    for(unsigned int i = 0; i < 20; i++)
+    for(unsigned int i = 0; i < nSpheres; i++)
     {
         sphere s = spheres.getItem(i);
         vec3<float> pos = s.getPos();
@@ -99,8 +100,6 @@ int main()
         std::cout << "Colour: " << colour.getX() << ", " << colour.getY() << ", " << colour.getZ() << std::endl;
         std::cout << "Radius: " << radius.getX() << std::endl;
         std::cout << std::endl;
-
     }
-
     return 0;
 }

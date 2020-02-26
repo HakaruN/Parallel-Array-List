@@ -1,5 +1,6 @@
 # depslib dependency file v1.0
-1582755856 source:/home/hakaru/Projecs/PAL/main.cpp
+1582758603 source:/home/hakaru/Projecs/PAL/main.cpp
+	"include/glfw3.h"
 	"include/ParaSphereStruc.h"
 	"include/sphere.h"
 	"include/vec1Pal.h"
@@ -86,4 +87,27 @@
 
 1582755885 source:/home/hakaru/Projecs/PAL/src/sphere.cpp
 	"../include/sphere.h"
+
+1582756821 /home/hakaru/Projecs/PAL/include/glfw3.h
+	<stddef.h>
+	<stdint.h>
+	<vulkan/vulkan.h>
+	<GLES/gl.h>
+	<GLES/glext.h>
+	<GLES2/gl2.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl3.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl31.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl32.h>
+	<GLES2/gl2ext.h>
+	<OpenGL/gl3.h>
+	<OpenGL/gl3ext.h>
+	<GL/glcorearb.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/gl.h>
+	<GL/glext.h>
+	<GL/glu.h>
 

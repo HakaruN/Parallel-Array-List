@@ -9,7 +9,7 @@
 class sphere
 {
     public:
-    sphere(vec3<float> pos, vec1<float> radius, vec3<float> colour);//cnstr
+    sphere(vec3<float> pos, vec3<float> colour, vec1<float> radius);//cnstr
     sphere(const sphere& other);//cpy cnstr
     ~sphere();//dstr
 
@@ -25,9 +25,8 @@ class sphere
 
     private:
         vec3<float> mPos;
-        vec1<float> mRadius;
         vec3<float> mColour;
-
+        vec1<float> mRadius;
 
 };
 

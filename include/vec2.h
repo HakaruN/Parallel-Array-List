@@ -3,7 +3,7 @@
 template<typename T>
 class vec2
 {
-    public:
+   public:
         vec2(T x, T y)
         {
             mX = x;
@@ -17,7 +17,7 @@ class vec2
 
         vec2(const vec2& other)
         {
-    //copy ctor
+            //copy ctor
             mX = other.mX;
             mY = other.mY;
         }

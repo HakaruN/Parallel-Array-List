@@ -1,6 +1,7 @@
 #ifndef PARASPHERESTRUC_H
 #define PARASPHERESTRUC_H
 #include "parallelArrayList.h"
+#include "sphere.h"
 #include "vec3Pal.h"
 #include "vec1Pal.h"
 
@@ -11,9 +12,12 @@ class ParaSphereStruc : public parallelArrayList
         ~ParaSphereStruc();
 
         void addItem(vec3<float> pos, vec3<float> colour, vec1<float> radius);
-        //uLong getEndIndex is a function available to get the array end pointer
+        void addItem(sphere s);
+
+        sphere getItem(unsigned long index);
 
     protected:
+        //member variables for the sphere, these are stored in PALs
         vec3Pal<float> mPositions;
         vec3Pal<float> mColours;
         vec1Pal<float> mRadius;

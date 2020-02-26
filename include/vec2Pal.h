@@ -4,7 +4,8 @@
 #include "vec2.h"
 template<typename T>
 class vec2Pal : public parallelArrayList
-{
+{//the vec2Pal is a structure where each element of a vector (X and Y) are stored in parallel arrays, this means that all the X's in the structure are contiguous and all the Y's are contiguous in memory
+
     public:
         vec2Pal(unsigned long length)
         {

@@ -34,15 +34,18 @@
 		</Compiler>
 		<Unit filename="include/ParaSphereStruc.h" />
 		<Unit filename="include/parallelArrayList.h" />
+		<Unit filename="include/sphere.h" />
+		<Unit filename="include/vec1.h" />
 		<Unit filename="include/vec1Pal.h" />
+		<Unit filename="include/vec2.h" />
+		<Unit filename="include/vec2Pal.h" />
 		<Unit filename="include/vec3.h" />
-		<Unit filename="include/vec3PAL.h" />
+		<Unit filename="include/vec4.h" />
+		<Unit filename="include/vec4Pal.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/ParaSphereStruc.cpp" />
 		<Unit filename="src/parallelArrayList.cpp" />
-		<Unit filename="src/vec1Pal.cpp" />
-		<Unit filename="src/vec3.cpp" />
-		<Unit filename="src/vec3PAL.cpp" />
+		<Unit filename="src/sphere.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />

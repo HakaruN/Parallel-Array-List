@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1582758603 source:/home/hakaru/Projecs/PAL/main.cpp
-	"include/glfw3.h"
+1582771436 source:/home/hakaru/Projecs/PAL/main.cpp
 	"include/ParaSphereStruc.h"
 	"include/sphere.h"
 	"include/vec1Pal.h"
 	"include/vec2Pal.h"
 	"include/vec3Pal.h"
 	"include/vec4Pal.h"
+	<GLFW/glfw3.h>
 	<iostream>
 	<ctime>
 	<cstdlib>

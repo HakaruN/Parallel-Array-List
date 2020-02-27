@@ -1,4 +1,3 @@
-#include "include/glfw3.h"
 #include "include/ParaSphereStruc.h"
 #include "include/sphere.h"
 
@@ -7,6 +6,7 @@
 #include "include/vec3Pal.h"
 #include "include/vec4Pal.h"
 
+#include <GLFW/glfw3.h>
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -16,6 +16,42 @@
 using namespace std;
 int main()
 {
+    GLFWwindow* window;
+
+    /* Initialize the library */
+    if (!glfwInit())
+    {
+        std::cout << "Error initing glfw" << std::endl;
+        return -1;
+    }
+
+    /* Create a windowed mode window and its OpenGL context */
+    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    if (!window)
+    {
+        std::cout<< "Error creating window" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+
+    /* Make the window's context current */
+    glfwMakeContextCurrent(window);
+
+    /* Loop until the user closes the window */
+    while (!glfwWindowShouldClose(window))
+    {
+        /* Render here */
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        /* Swap front and back buffers */
+        glfwSwapBuffers(window);
+
+        /* Poll for and process events */
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
+
     unsigned long nSpheres = 1000;
     ParaSphereStruc spheres(nSpheres);
 

@@ -41,7 +41,6 @@
 			<Add option="-lGL" />
 			<Add option="-lpthread" />
 			<Add option="-ldl" />
-			<Add option="-lGLEW" />
 			<Add library="../../../../usr/local/lib/libglfw3.a" />
 			<Add library="../../../../lib/arm-linux-gnueabihf/libpthread-2.23.so" />
 			<Add library="../../../../lib/arm-linux-gnueabihf/libdl-2.23.so" />

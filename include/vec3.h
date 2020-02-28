@@ -51,6 +51,15 @@ class vec3
             ));
         }
 
+        inline T dot (vec3<T> other)
+        {
+            T returnVec =
+            (mX * other.getX()) +
+            (mY * other.getY()) +
+            (mZ * other.getZ());
+            return returnVec;
+        }
+
 
     protected:
     private:

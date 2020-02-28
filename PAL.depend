@@ -1,17 +1,21 @@
 # depslib dependency file v1.0
-1582920940 source:/home/hakaru/Projecs/PAL/main.cpp
+1582931770 source:/home/hakaru/Projecs/PAL/main.cpp
 	"include/ParaSphereStruc.h"
 	"include/sphere.h"
 	"include/vec1Pal.h"
 	"include/vec2Pal.h"
 	"include/vec3Pal.h"
 	"include/vec4Pal.h"
+	"include/ray.h"
 	<GL/glew.h>
 	"libs/glfw/include/glfw3.h"
 	<GL/gl.h>
+	<chrono>
 	<iostream>
 	<ctime>
 	<cstdlib>
+	<fstream>
+	<vector>
 
 1582666814 /home/hakaru/Projecs/PAL/headers/ParaSphereStruc.h
 	"parallelArrayList.h"
@@ -46,7 +50,7 @@
 
 1582722647 source:/home/hakaru/Projecs/PAL/src/vec3.cpp
 
-1582921344 /home/hakaru/Projecs/PAL/include/vec3.h
+1582927394 /home/hakaru/Projecs/PAL/include/vec3.h
 
 1582724131 source:/home/hakaru/Projecs/PAL/src/vec3PAL.cpp
 
@@ -161,4 +165,10 @@
 	<stdint.h>
 	<inttypes.h>
 	<stdint.h>
+
+1582931355 /home/hakaru/Projecs/PAL/include/ray.h
+	"vec3.h"
+	"vec1.h"
+	"sphere.h"
+	<math.h>
 

@@ -1,5 +1,6 @@
 #ifndef VEC4_H
 #define VEC4_H
+#include <math.h>
 
 template<typename T>
 class vec4
@@ -18,6 +19,11 @@ class vec4
     }
 
     public:
+        inline vec4<float> operator + (vec4<float> other){return vec4(mX + other.getX(), mY + other.getY(),mZ + other.getZ(), mW + other.getW());}
+        inline vec4<float> operator - (vec4<float> other){return vec4(mX - other.getX(), mY - other.getY(),mZ - other.getZ(), mW - other.getW());}
+        inline vec4<float> operator * (float other){return vec4<float>(mX * other, mZ * other, mY * other, mW * other);}
+        inline vec4<float> operator / (float other){return vec4<float>(mX / other, mZ / other, mY / other, mW / other);}
+
         vec4(T x, T y, T z, T w)
         {
             mX = x;
@@ -40,15 +46,31 @@ class vec4
             mW = other.mW;
         }
 
-        T getX(){return mX;}
-        T getY(){return mY;}
-        T getZ(){return mZ;}
-        T getW(){return mW;}
+        inline T getX(){return mX;}
+        inline T getY(){return mY;}
+        inline T getZ(){return mZ;}
+        inline T getW(){return mW;}
 
-        void setX(T x){ mX = x;}
-        void setY(T y){ mY = y;}
-        void setZ(T z){ mZ = z;}
-        void setW(T w){ mW = w;}
+        inline void setX(T x){ mX = x;}
+        inline void setY(T y){ mY = y;}
+        inline void setZ(T z){ mZ = z;}
+        inline void setW(T w){ mW = w;}
+
+        inline vec4<T> normalise()
+        {
+            float magnitude = (float)sqrt(
+            mX * mX +
+            mY * mY +
+            mZ * mZ +
+            mW * mW
+            );
+            return(vec4<T>(
+            mX / magnitude,
+            mY / magnitude,
+            mZ / magnitude,
+            mW / magnitude
+            ));
+        }
 
 
     protected:

@@ -21,6 +21,8 @@ class sphere
     vec1<float> getRadius() {return mRadius;}
     vec3<float> getColour() {return mColour;}
 
+    vec3<float> getNormal(vec3<float> hitPoint);
+
     protected:
 
     private:

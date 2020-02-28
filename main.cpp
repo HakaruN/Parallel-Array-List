@@ -14,9 +14,12 @@
 #include <ctime>
 #include <cstdlib>
 
+bool initOpenGL(int width, int height, GLFWwindow* window)
+{
 
 
-using namespace std;
+}
+
 int main()
 {
     unsigned short width = 600;
@@ -27,19 +30,26 @@ int main()
     1.0f, 1.0f,
     0.0f, 1.0f
     };
-    vec3Pal<char> frameBuffer(width * height);
-    unsigned int frameBufferIndices [3] = {0,0,0};
 
+    //initing the frame buffer
+    vec3Pal<unsigned char> frameBuffer(width * height);
+    for(unsigned short y = 0; y < height; y++)
+        for(unsigned short x = 0; x < width; x++)
+        {
+            frameBuffer.addItem(vec3<unsigned char> (( x+y)/256,(x+y)/256,(x+y)/256 ));
+        }
 
-
+    #ifdef DEBUG
     std::cout << glfwGetVersionString() << std::endl;
+    #endif // debug
+
     /* Initialize the library */
     if (!glfwInit())
     {
         std::cout << "Error initing glfw" << std::endl;
         return -1;
     }
-    /* Create a windowed mode window and its OpenGL context */
+
     GLFWwindow* window = glfwCreateWindow(width, height, "Hello World", NULL, NULL);
     if (!window)
     {
@@ -62,31 +72,12 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);//dont want old openGL
 
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);//setting texture repeate mode
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//texture filtering
 
 
-
-
-
-
-    unsigned int graphicsFB;
-    glGenTextures(1, &graphicsFB);
-    glBindTexture(GL_TEXTURE_2D, graphicsFB);
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, GL_RGB8, GL_UNSIGNED_BYTE, frameBuffer);
-
-    glGenBuffers(3 ,frameBufferIndices);//makes 3 buffers for the GPU, ths stores the PAL for the frame buffer
-
-    glBindBuffer(GL_ARRAY_BUFFER, frameBufferIndices[0]);//bind and load the x (Red) values array from the FB onto GPU
-    glBufferData(GL_ARRAY_BUFFER, sizeof(char) * width * height, frameBuffer.getArray(0), GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, frameBufferIndices[1]);//bind and load the Y (Red) values array from the FB onto GPU
-    glBufferData(GL_ARRAY_BUFFER, sizeof(char) * width * height, frameBuffer.getArray(1), GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, frameBufferIndices[2]);//bind and load the Z (Red) values array from the FB onto GPU
-    glBufferData(GL_ARRAY_BUFFER, sizeof(char) * width * height, frameBuffer.getArray(2), GL_DYNAMIC_DRAW);
-
-    GLuint VertexArrayID;
-    //glGenVertexArrays(1, &VertexArrayID);
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);

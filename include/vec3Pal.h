@@ -55,7 +55,7 @@ class vec3Pal : public parallelArrayList
             {
                 return mY;
             }
-            else if(arrayID == 3)
+            else if(arrayID == 2)
             {
                 return mZ;
             }

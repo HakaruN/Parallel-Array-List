@@ -5,6 +5,11 @@ template<typename T>
 class vec3
 {
     public:
+        inline vec3<float> operator + (vec3<float> other){return vec3(mX + other.getX(), mY + other.getY(),mZ + other.getZ());}
+        inline vec3<float> operator - (vec3<float> other){return vec3(mX - other.getX(), mY - other.getY(),mZ - other.getZ());}
+        inline vec3<float> operator * (float other){return vec3<float>(mX * other, mY * other, mZ * other);}
+        inline vec3<float> operator / (float other){return vec3<float>(mX / other, mY / other, mZ / other);}
+
         vec3(T x, T y, T z)
         {
             mX = x;
@@ -25,13 +30,26 @@ class vec3
             mZ = other.mZ;
         }
 
-        T getX(){return mX;}
-        T getY(){return mY;}
-        T getZ(){return mZ;}
+        inline T getX(){return mX;}
+        inline T getY(){return mY;}
+        inline T getZ(){return mZ;}
 
-        void setX(T x){ mX = x;}
-        void setY(T y){ mY = y;}
-        void setZ(T z){ mZ = z;}
+        inline void setX(T x){ mX = x;}
+        inline void setY(T y){ mY = y;}
+        inline void setZ(T z){ mZ = z;}
+
+        inline vec3<T> normalise()
+        {
+            float magnitude = (float)sqrt(
+            mX * mX +
+            mY * mY
+            );
+            return(vec3<T>(
+            mX / magnitude,
+            mY / magnitude,
+            mZ / magnitude
+            ));
+        }
 
 
     protected:

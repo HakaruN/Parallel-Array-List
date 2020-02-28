@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1582897015 source:/home/hakaru/Projecs/PAL/main.cpp
+1582920940 source:/home/hakaru/Projecs/PAL/main.cpp
 	"include/ParaSphereStruc.h"
 	"include/sphere.h"
 	"include/vec1Pal.h"
@@ -46,7 +46,7 @@
 
 1582722647 source:/home/hakaru/Projecs/PAL/src/vec3.cpp
 
-1582722979 /home/hakaru/Projecs/PAL/include/vec3.h
+1582921344 /home/hakaru/Projecs/PAL/include/vec3.h
 
 1582724131 source:/home/hakaru/Projecs/PAL/src/vec3PAL.cpp
 
@@ -64,34 +64,35 @@
 
 1582723053 source:/home/hakaru/Projecs/PAL/src/vec2Pal.cpp
 
-1582895463 /home/hakaru/Projecs/PAL/include/vec3Pal.h
+1582897815 /home/hakaru/Projecs/PAL/include/vec3Pal.h
 	"parallelArrayList.h"
 	"vec3.h"
 	<iostream>
 
-1582752876 /home/hakaru/Projecs/PAL/include/vec1.h
+1582921356 /home/hakaru/Projecs/PAL/include/vec1.h
 
 1582895436 /home/hakaru/Projecs/PAL/include/vec2Pal.h
 	"parallelArrayList.h"
 	"vec2.h"
 	<iostream>
 
-1582753180 /home/hakaru/Projecs/PAL/include/vec2.h
+1582921341 /home/hakaru/Projecs/PAL/include/vec2.h
 
 1582895511 /home/hakaru/Projecs/PAL/include/vec4Pal.h
 	"parallelArrayList.h"
 	"vec4.h"
 	<iostream>
 
-1582749902 /home/hakaru/Projecs/PAL/include/vec4.h
+1582921273 /home/hakaru/Projecs/PAL/include/vec4.h
+	<math.h>
 
-1582754291 /home/hakaru/Projecs/PAL/include/sphere.h
+1582920176 /home/hakaru/Projecs/PAL/include/sphere.h
 	"vec1Pal.h"
 	"vec2Pal.h"
 	"vec3Pal.h"
 	"vec4Pal.h"
 
-1582755885 source:/home/hakaru/Projecs/PAL/src/sphere.cpp
+1582920999 source:/home/hakaru/Projecs/PAL/src/sphere.cpp
 	"../include/sphere.h"
 
 1582756821 /home/hakaru/Projecs/PAL/include/glfw3.h

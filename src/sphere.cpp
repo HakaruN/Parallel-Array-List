@@ -6,3 +6,8 @@ sphere::sphere(vec3<float> pos, vec3<float> colour, vec1<float> radius)
 }
 
 sphere::~sphere(){}
+
+vec3<float> sphere::getNormal(vec3<float> hitPoint)
+{
+    return (hitPoint - mPos);
+}

@@ -32,12 +32,12 @@ void ParaSphereStruc::addItem(sphere s)
     mArrayEndIndex++;
 }
 
-sphere ParaSphereStruc::getItem(unsigned long index)
+sphere ParaSphereStruc::getVec(unsigned long index)
 {//will construct and return a sphere from the structure at the given index
     sphere returnSphere(
-    mPositions.getItem(index),
-    mColours.getItem(index),
-    mRadius.getItem(index)
+    mPositions.getVec(index),
+    mColours.getVec(index),
+    mRadius.getVec(index)
     );
 
     return returnSphere;

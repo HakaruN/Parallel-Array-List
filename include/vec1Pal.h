@@ -2,6 +2,7 @@
 #define VEC1PAL_H
 #include "parallelArrayList.h"
 #include "vec1.h"
+#include <iostream>
 template<typename T>
 class vec1Pal : public parallelArrayList
 {
@@ -30,16 +31,28 @@ class vec1Pal : public parallelArrayList
             mArrayEndIndex++;
         }
 
-        vec1<T> getItem(unsigned long index)
+        vec1<T> getVec(unsigned long index)
         {//will return an item from the strucure given an index into the array
             T vec1(this->mX[index]);
             return vec1;
         }
+        T* getArray(unsigned char arrayID = 0)
+        {
+            if(arrayID == 0)
+            {
+                return mX;
+            }
+            else
+            {
+                std::cout << "Error, incorrect array ID requested from PAL2, ID: " << arrayID << std::endl;
+                return nullptr;
+            }
+        }
 
         T dot(unsigned long indexOne, unsigned long indexTwo)
         {//does a dot product on 2 1d vectors (so is basically a scalar mult)
-            T elementOne = getItem(indexOne);
-            T elementTwo = getItem(indexTwo);
+            T elementOne = getVec(indexOne);
+            T elementTwo = getVec(indexTwo);
             T dotProd = (elementOne * elementTwo);
             return dotProd;
         }

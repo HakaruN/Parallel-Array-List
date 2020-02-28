@@ -1,12 +1,14 @@
 # depslib dependency file v1.0
-1582771436 source:/home/hakaru/Projecs/PAL/main.cpp
+1582897015 source:/home/hakaru/Projecs/PAL/main.cpp
 	"include/ParaSphereStruc.h"
 	"include/sphere.h"
 	"include/vec1Pal.h"
 	"include/vec2Pal.h"
 	"include/vec3Pal.h"
 	"include/vec4Pal.h"
-	<GLFW/glfw3.h>
+	<GL/glew.h>
+	"libs/glfw/include/glfw3.h"
+	<GL/gl.h>
 	<iostream>
 	<ctime>
 	<cstdlib>
@@ -27,7 +29,7 @@
 
 1582667009 /home/hakaru/Projecs/PAL/headers/vec3.h
 
-1582753558 /home/hakaru/Projecs/PAL/include/ParaSphereStruc.h
+1582895511 /home/hakaru/Projecs/PAL/include/ParaSphereStruc.h
 	"parallelArrayList.h"
 	"sphere.h"
 	"vec3Pal.h"
@@ -38,7 +40,7 @@
 1582668065 source:/home/hakaru/Projecs/PAL/src/parallelArrayList.cpp
 	"../include/ParaSphereStruc.h"
 
-1582755656 source:/home/hakaru/Projecs/PAL/src/ParaSphereStruc.cpp
+1582895511 source:/home/hakaru/Projecs/PAL/src/ParaSphereStruc.cpp
 	"../include/ParaSphereStruc.h"
 	<iostream>
 
@@ -55,27 +57,31 @@
 1582680471 source:/home/hakaru/Projecs/PAL/src/vec1Pal.cpp
 	"../include/vec1Pal.h"
 
-1582753858 /home/hakaru/Projecs/PAL/include/vec1Pal.h
+1582895426 /home/hakaru/Projecs/PAL/include/vec1Pal.h
 	"parallelArrayList.h"
 	"vec1.h"
+	<iostream>
 
 1582723053 source:/home/hakaru/Projecs/PAL/src/vec2Pal.cpp
 
-1582735649 /home/hakaru/Projecs/PAL/include/vec3Pal.h
+1582895463 /home/hakaru/Projecs/PAL/include/vec3Pal.h
 	"parallelArrayList.h"
 	"vec3.h"
+	<iostream>
 
 1582752876 /home/hakaru/Projecs/PAL/include/vec1.h
 
-1582753205 /home/hakaru/Projecs/PAL/include/vec2Pal.h
+1582895436 /home/hakaru/Projecs/PAL/include/vec2Pal.h
 	"parallelArrayList.h"
 	"vec2.h"
+	<iostream>
 
 1582753180 /home/hakaru/Projecs/PAL/include/vec2.h
 
-1582735414 /home/hakaru/Projecs/PAL/include/vec4Pal.h
+1582895511 /home/hakaru/Projecs/PAL/include/vec4Pal.h
 	"parallelArrayList.h"
 	"vec4.h"
+	<iostream>
 
 1582749902 /home/hakaru/Projecs/PAL/include/vec4.h
 
@@ -110,4 +116,48 @@
 	<GL/gl.h>
 	<GL/glext.h>
 	<GL/glu.h>
+
+1582832634 /home/hakaru/Projecs/PAL/libs/glew/include/glew.h
+	<cstddef>
+	<cstdint>
+	<stddef.h>
+	<stdint.h>
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1582833616 /home/hakaru/Projecs/PAL/libs/glfw/include/glfw3.h
+	<stddef.h>
+	<stdint.h>
+	<vulkan/vulkan.h>
+	<GLES/gl.h>
+	<GLES/glext.h>
+	<GLES2/gl2.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl3.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl31.h>
+	<GLES2/gl2ext.h>
+	<GLES3/gl32.h>
+	<GLES2/gl2ext.h>
+	<OpenGL/gl3.h>
+	<OpenGL/gl3ext.h>
+	<GL/glcorearb.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/gl.h>
+	<GL/glext.h>
+	<GL/glu.h>
+
+1582840055 /home/hakaru/Projecs/PAL/libs/glad/include/glad.h
+	"khrplatform.h"
+
+1582840010 /home/hakaru/Projecs/PAL/libs/glad/include/khrplatform.h
+	<stdint.h>
+	<inttypes.h>
+	<stdint.h>
 

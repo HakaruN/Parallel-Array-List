@@ -2,6 +2,7 @@
 #define VEC3PAL_H
 #include "parallelArrayList.h"
 #include "vec3.h"
+#include <iostream>
 template<typename T>
 class vec3Pal : public parallelArrayList
 {
@@ -38,21 +39,42 @@ class vec3Pal : public parallelArrayList
             mArrayEndIndex++;
         }
 
-        vec3<T> getItem(unsigned long index)
+        vec3<T> getVec(unsigned long index)
         {
             vec3<T> vec(mX[index], mY[index], mZ[index]);
             return vec;
         }
 
+        T* getArray(unsigned char arrayID)
+        {
+            if(arrayID == 0)
+            {
+                return mX;
+            }
+            else if(arrayID == 1)
+            {
+                return mY;
+            }
+            else if(arrayID == 3)
+            {
+                return mZ;
+            }
+            else
+            {
+                std::cout << "Error, incorrect array ID requested from PAL3, ID: " << arrayID << std::endl;
+                return nullptr;
+            }
+        }
+
        T dot(unsigned long indexOne, unsigned long indexTwo)
         {
-            T elementOneX = getItem(indexOne).getX();
-            T elementOneY = getItem(indexOne).getY();
-            T elementOneZ = getItem(indexOne).getZ();
+            T elementOneX = getVec(indexOne).getX();
+            T elementOneY = getVec(indexOne).getY();
+            T elementOneZ = getVec(indexOne).getZ();
 
-            T elementTwoX = getItem(indexTwo).getX();
-            T elementTwoY = getItem(indexTwo).getY();
-            T elementTwoZ = getItem(indexTwo).getZ();
+            T elementTwoX = getVec(indexTwo).getX();
+            T elementTwoY = getVec(indexTwo).getY();
+            T elementTwoZ = getVec(indexTwo).getZ();
 
             T returnVec =
             (elementOneX * elementTwoX) +
@@ -63,8 +85,8 @@ class vec3Pal : public parallelArrayList
 
         vec3<T> cross(unsigned long indexOne, unsigned long indexTwo)
         {
-            vec3<T> vecOne = getItem(indexOne);
-            vec3<T> vecTwo = getItem(indexTwo);
+            vec3<T> vecOne = getVec(indexOne);
+            vec3<T> vecTwo = getVec(indexTwo);
 
             T elementOneX = vecOne.getX();
             T elementOneY = vecOne.getY();

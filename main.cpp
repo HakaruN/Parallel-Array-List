@@ -6,7 +6,10 @@
 #include "include/vec3Pal.h"
 #include "include/vec4Pal.h"
 
-#include <GLFW/glfw3.h>
+#include <GL/glew.h>
+#include "libs/glfw/include/glfw3.h"
+#include <GL/gl.h>
+
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -16,17 +19,28 @@
 using namespace std;
 int main()
 {
-    GLFWwindow* window;
+    unsigned short width = 600;
+    unsigned short height = 400;
+    float texCoords [] = {
+    0.0f, 0.0f,
+    1.0f, 0.0f,
+    1.0f, 1.0f,
+    0.0f, 1.0f
+    };
+    vec3Pal<char> frameBuffer(width * height);
+    unsigned int frameBufferIndices [3] = {0,0,0};
 
+
+
+    std::cout << glfwGetVersionString() << std::endl;
     /* Initialize the library */
     if (!glfwInit())
     {
         std::cout << "Error initing glfw" << std::endl;
         return -1;
     }
-
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(width, height, "Hello World", NULL, NULL);
     if (!window)
     {
         std::cout<< "Error creating window" << std::endl;
@@ -34,11 +48,51 @@ int main()
         return -1;
     }
 
+    glfwMakeContextCurrent(window);
+    if(glewInit() != GLEW_OK)
+    {
+        std::cout << "Error initing glew" << std::endl;
+        return -2;
+    }
+
+    glewExperimental = GL_TRUE;
+
+    glfwWindowHint(GLFW_SAMPLES, 4);//4x AA
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);//opengl 3.3
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);//dont want old openGL
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);//setting texture repeate mode
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//texture filtering
+
+
+
+
+
+
+    unsigned int graphicsFB;
+    glGenTextures(1, &graphicsFB);
+    glBindTexture(GL_TEXTURE_2D, graphicsFB);
+    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, width, height, GL_RGB8, GL_UNSIGNED_BYTE, frameBuffer);
+
+    glGenBuffers(3 ,frameBufferIndices);//makes 3 buffers for the GPU, ths stores the PAL for the frame buffer
+
+    glBindBuffer(GL_ARRAY_BUFFER, frameBufferIndices[0]);//bind and load the x (Red) values array from the FB onto GPU
+    glBufferData(GL_ARRAY_BUFFER, sizeof(char) * width * height, frameBuffer.getArray(0), GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, frameBufferIndices[1]);//bind and load the Y (Red) values array from the FB onto GPU
+    glBufferData(GL_ARRAY_BUFFER, sizeof(char) * width * height, frameBuffer.getArray(1), GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, frameBufferIndices[2]);//bind and load the Z (Red) values array from the FB onto GPU
+    glBufferData(GL_ARRAY_BUFFER, sizeof(char) * width * height, frameBuffer.getArray(2), GL_DYNAMIC_DRAW);
+
+    GLuint VertexArrayID;
+    //glGenVertexArrays(1, &VertexArrayID);
+
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
-
+    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);//ensure we can capture keypresses
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
+    while (glfwWindowShouldClose(window)== 0 && glfwGetKey(window, GLFW_KEY_Q) != GLFW_PRESS)//allows window to close on 'q' keypress
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
@@ -82,25 +136,25 @@ int main()
     for(unsigned long i = 0; i < palLength; i++)
     {
         //vec3<float> vec(0,0,0);
-        //vec = vec3s.getItem(i);
+        //vec = vec3s.getVec(i);
 
         std::cout<< std::endl << "Vector index: " << i << std::endl;
-        vec1<float> vecOne = vec1s.getItem(i);
-        std::cout << "Vec1 - X: " << vec1s.getItem(i).getX() << std::endl;
+        vec1<float> vecOne = vec1s.getVec(i);
+        std::cout << "Vec1 - X: " << vec1s.getVec(i).getX() << std::endl;
 
-        vec2<float> vecTwo = vec2s.getItem(i);
+        vec2<float> vecTwo = vec2s.getVec(i);
         std::cout << "Vec2 - X: " << vecTwo.getX() << ", Y: " << vecTwo.getY() << std::endl;
 
-        vec3<float> vecThree = vec3s.getItem(i);
+        vec3<float> vecThree = vec3s.getVec(i);
         std::cout << "Vec3 - X: " << vecThree.getX() << ", Y: " << vecThree.getY() << ", Z: " << vecThree.getZ() << std::endl;
 
-        vec4<float> vecFour = vec4s.getItem(i);
+        vec4<float> vecFour = vec4s.getVec(i);
         std::cout << "Vec4 - X: " << vecFour.getX() << ", Y: " << vecFour.getY() << ", Z: " << vecFour.getZ() << ", W: " << vecFour.getW() << std::endl;
 
     }
     */
 
-
+/*
     std::srand(std::time(nullptr));
     for(unsigned short s = 0; s < nSpheres; s++)
     {
@@ -127,7 +181,7 @@ int main()
 
     for(unsigned int i = 0; i < nSpheres; i++)
     {
-        sphere s = spheres.getItem(i);
+        sphere s = spheres.getVec(i);
         vec3<float> pos = s.getPos();
         vec3<float> colour = s.getColour();
         vec1<float> radius = s.getRadius();
@@ -137,5 +191,6 @@ int main()
         std::cout << "Radius: " << radius.getX() << std::endl;
         std::cout << std::endl;
     }
+    */
     return 0;
 }

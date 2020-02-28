@@ -14,7 +14,7 @@ class ParaSphereStruc : public parallelArrayList
         void addItem(vec3<float> pos, vec3<float> colour, vec1<float> radius);
         void addItem(sphere s);
 
-        sphere getItem(unsigned long index);
+        sphere getVec(unsigned long index);
 
     protected:
         //member variables for the sphere, these are stored in PALs

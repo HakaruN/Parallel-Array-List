@@ -32,16 +32,21 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 			<Add option="-lpthread" />
+			<Add option="-lGLEW" />
+			<Add option="-lGL" />
 		</Compiler>
 		<Linker>
-			<Add option="-lGL" />
+			<Add option="-lGLEW" />
 			<Add option="-lGLU" />
+			<Add option="-lGL" />
 			<Add option="-lpthread" />
 			<Add option="-ldl" />
-			<Add library="../../../../usr/local/lib/libGLEW.so" />
+			<Add option="-lGLEW" />
 			<Add library="../../../../usr/local/lib/libglfw3.a" />
 			<Add library="../../../../lib/arm-linux-gnueabihf/libpthread-2.23.so" />
 			<Add library="../../../../lib/arm-linux-gnueabihf/libdl-2.23.so" />
+			<Add library="../../../../usr/local/lib/libGLEW.so" />
+			<Add library="../../../../usr/local/lib/libGLU/libGLU.so" />
 		</Linker>
 		<Unit filename="include/ParaSphereStruc.h" />
 		<Unit filename="include/parallelArrayList.h" />

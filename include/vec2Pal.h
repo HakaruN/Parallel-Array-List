@@ -2,6 +2,7 @@
 #define VEC2PAL_H
 #include "parallelArrayList.h"
 #include "vec2.h"
+#include <iostream>
 template<typename T>
 class vec2Pal : public parallelArrayList
 {//the vec2Pal is a structure where each element of a vector (X and Y) are stored in parallel arrays, this means that all the X's in the structure are contiguous and all the Y's are contiguous in memory
@@ -35,21 +36,37 @@ class vec2Pal : public parallelArrayList
             mArrayEndIndex++;
         }
 
-        vec2<T> getItem(unsigned long index)
+        vec2<T> getVec(unsigned long index)
         {
 
             vec2<T> vec(mX[index], mY[index]);
             return vec;
 
         }
+        T* getArray(unsigned char arrayID)
+        {
+            if(arrayID == 0)
+            {
+                return mX;
+            }
+            else if(arrayID == 1)
+            {
+                return mY;
+            }
+            else
+            {
+                std::cout << "Error, incorrect array ID requested from PAL2, ID: " << arrayID << std::endl;
+                return nullptr;
+            }
+        }
 
         T dot(unsigned long indexOne, unsigned long indexTwo)
         {
-            T elementOneX = getItem(indexOne).getX();
-            T elementOneY = getItem(indexOne).getY();
+            T elementOneX = getVec(indexOne).getX();
+            T elementOneY = getVec(indexOne).getY();
 
-            T elementTwoX = getItem(indexTwo).getX();
-            T elementTwoY = getItem(indexTwo).getY();
+            T elementTwoX = getVec(indexTwo).getX();
+            T elementTwoY = getVec(indexTwo).getY();
 
             T returnVec = (elementOneX * elementTwoX) + (elementOneY * elementTwoY);
             return returnVec;

@@ -2,6 +2,7 @@
 #define VEC4PAL_H
 #include "parallelArrayList.h"
 #include "vec4.h"
+#include <iostream>
 template<typename T>
 class vec4Pal : public parallelArrayList
 {
@@ -42,10 +43,35 @@ class vec4Pal : public parallelArrayList
         }
 
         //allows for getting an item out of the data structure
-        vec4<T> getItem(unsigned long index)
+        vec4<T> getVec(unsigned long index)
         {
             vec4<T> vec(mX[index], mY[index], mZ[index], mW[index]);
             return vec;
+        }
+
+        T* getArray(unsigned char arrayID)
+        {
+            if(arrayID == 0)
+            {
+                return mX;
+            }
+            else if(arrayID == 1)
+            {
+                return mY;
+            }
+            else if(arrayID == 3)
+            {
+                return mZ;
+            }
+            else if(arrayID == 4)
+            {
+                return mW;
+            }
+            else
+            {
+                std::cout << "Error, incorrect array ID requested from PAL4, ID: " << arrayID << std::endl;
+                return nullptr;
+            }
         }
 
         //allows for setting/updating information in the data structure
@@ -60,15 +86,15 @@ class vec4Pal : public parallelArrayList
         //passing the index for two elements and will return the dot of those elements
         T dot(unsigned long indexOne, unsigned long indexTwo)
         {
-            T elementOneX = getItem(indexOne).getX();
-            T elementOneY = getItem(indexOne).getY();
-            T elementOneZ = getItem(indexOne).getZ();
-            T elementOneW = getItem(indexOne).getW();
+            T elementOneX = getVec(indexOne).getX();
+            T elementOneY = getVec(indexOne).getY();
+            T elementOneZ = getVec(indexOne).getZ();
+            T elementOneW = getVec(indexOne).getW();
 
-            T elementTwoX = getItem(indexTwo).getX();
-            T elementTwoY = getItem(indexTwo).getY();
-            T elementTwoZ = getItem(indexTwo).getZ();
-            T elementTwoW = getItem(indexTwo).getW();
+            T elementTwoX = getVec(indexTwo).getX();
+            T elementTwoY = getVec(indexTwo).getY();
+            T elementTwoZ = getVec(indexTwo).getZ();
+            T elementTwoW = getVec(indexTwo).getW();
 
             T returnVec =
             (elementOneX * elementTwoX) +
@@ -81,8 +107,8 @@ class vec4Pal : public parallelArrayList
         //passing the index for two elements and will return the 3d cross prod in 4d form (leaving W-dim as 0)
         vec4<T> cross(unsigned long indexOne, unsigned long indexTwo)
         {
-            vec4<T> vecOne = getItem(indexOne);
-            vec4<T> vecTwo = getItem(indexTwo);
+            vec4<T> vecOne = getVec(indexOne);
+            vec4<T> vecTwo = getVec(indexTwo);
 
             T elementOneX = vecOne.getX();
             T elementOneY = vecOne.getY();

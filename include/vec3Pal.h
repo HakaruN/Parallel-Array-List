@@ -22,6 +22,14 @@ class vec3Pal : public parallelArrayList
             delete [] mZ;
         }
 
+        vec3Pal(const vec3Pal& other)
+        {
+            ~vec3Pal();
+            mX = other.mX;
+            mY = other.mY;
+            mZ = other.mZ;
+        }
+
         void addItem(T x, T y, T z)
         {
             mX[mArrayEndIndex] = x;

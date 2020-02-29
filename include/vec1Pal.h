@@ -18,6 +18,10 @@ class vec1Pal : public parallelArrayList
             delete [] mX;//delete the array that stores the 1d numbers
         }
 
+        vec1Pal(const vec1Pal& other)
+        {
+            mX = other.mX;
+        }
 
         void addItem(T x)
         {//add item to the end and increment the end pointer

@@ -5,7 +5,7 @@
 template<typename T>
 class vec4
 {
-    vec3<T> operator + (const vec3<T>& other)
+    vec4<T> operator + (const vec4<T>& other)
     {
         vec3<T> returnVec;
 
@@ -46,10 +46,10 @@ class vec4
             mW = other.mW;
         }
 
-        inline T getX(){return mX;}
-        inline T getY(){return mY;}
-        inline T getZ(){return mZ;}
-        inline T getW(){return mW;}
+        inline T* getX(){return &mX;}
+        inline T* getY(){return &mY;}
+        inline T* getZ(){return &mZ;}
+        inline T* getW(){return &mW;}
 
         inline void setX(T x){ mX = x;}
         inline void setY(T y){ mY = y;}

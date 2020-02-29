@@ -9,7 +9,6 @@ class ParaSphereStruc : public parallelArrayList
 {
     public:
         ParaSphereStruc(unsigned long length);
-        ~ParaSphereStruc();
 
         void addItem(vec3<float> pos, vec3<float> colour, vec1<float> radius);
         void addItem(sphere s);
@@ -18,6 +17,7 @@ class ParaSphereStruc : public parallelArrayList
 
                 //allows for setting/updating information in the data structure
         void setItem(unsigned long index, sphere s);
+        void setPos(unsigned long index, vec3<float> newPos);
 
 
     protected:

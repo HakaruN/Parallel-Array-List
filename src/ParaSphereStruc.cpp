@@ -6,11 +6,6 @@ ParaSphereStruc::ParaSphereStruc(unsigned long length)
 {
 }
 
-ParaSphereStruc::~ParaSphereStruc()
-{
-    //nothing needs cleaning up yet (that i know of)
-    //dtor
-}
 
 
 void ParaSphereStruc::addItem(vec3<float> pos, vec3<float> colour, vec1<float> radius)
@@ -50,3 +45,8 @@ void ParaSphereStruc::setItem(unsigned long index, sphere s)
            mColours.setItem(index, s.getColour());
            mRadius.setItem(index, s.getRadius());
 }
+
+ void ParaSphereStruc::setPos(unsigned long index, vec3<float> newPos)
+ {
+        mPositions.setItem(index, newPos);
+ }

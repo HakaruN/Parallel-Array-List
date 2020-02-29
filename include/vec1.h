@@ -14,15 +14,11 @@ class vec1
             mX = x;
         }
 
-        ~vec1()
-        {
-            //nothing needs cleaning up yet (that i know of)
-        }
-
         vec1(const vec1& other)
-        {//copy ctor
+        {
             mX = other.mX;
         }
+
 
         T getX(){return mX;}
         void setX(T x){ mX = x;}

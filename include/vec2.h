@@ -15,20 +15,15 @@ class vec2
             mY = y;
         }
 
-        ~vec2()
-        {
-
-        }
-
         vec2(const vec2& other)
         {
-            //copy ctor
             mX = other.mX;
             mY = other.mY;
         }
 
-        T getX(){return mX;}
-        T getY(){return mY;}
+
+        T getX(){return &mX;}
+        T getY(){return &mY;}
 
         void setX(T x){ mX = x;}
         void setY(T y){ mY = y;}

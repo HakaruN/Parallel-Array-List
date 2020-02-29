@@ -20,7 +20,6 @@ class sphere
     }
     */
 
-    ~sphere();//dstr
 
     void setPos(vec3<float> pos) {mPos = pos;}
     void setRadius(vec1<float> radius) {mRadius = radius;}

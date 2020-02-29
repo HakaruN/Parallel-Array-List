@@ -18,12 +18,9 @@
 #include <cstdlib>
 #include <fstream>
 #include <vector>
-
-bool initOpenGL(int width, int height, GLFWwindow* window)
-{
+#include <math.h>
 
 
-}
 
 int main()
 {
@@ -32,6 +29,7 @@ int main()
     const unsigned char coloursPerPixel = 3;
 
     unsigned char* frameBuffer = new unsigned char[width * height * coloursPerPixel];
+    unsigned short* pixelObjectMap = new unsigned short[width * height];
 
 
      for(unsigned short y = 0; y < height; y++)
@@ -40,7 +38,12 @@ int main()
             frameBuffer[((y * width) + x) * coloursPerPixel + 0] = 0;
             frameBuffer[((y * width) + x) * coloursPerPixel + 1] = 0;
             frameBuffer[((y * width) + x) * coloursPerPixel + 2] = 0;
+
+            //this value is used as an index to the last element rendered to this pixel in the PAL containing geometry
+            //
+            pixelObjectMap[((y * width) + x)] = 0xffff;
         }
+
 
 
     #ifdef DEBUG
@@ -83,13 +86,11 @@ int main()
 
 
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);//ensure we can capture keypresses
     /* Loop until the user closes the window */
 
     std::srand(std::time(nullptr));//makes a seed for the random func
-    unsigned int nSpheres = 10;
+    unsigned int nSpheres = 25;
     ParaSphereStruc spheres(nSpheres);//declare a structure to hold 1000 spheres
 
 
@@ -172,32 +173,73 @@ for(unsigned short s = 0; s < nSpheres; s++)
 
     std::ofstream ofs("fpslog", std::ofstream::out);
 
+    bool evenness = false;
+
+    int stepsPerRotation = 4;
+    int stride = spheres.getEndIndex() / stepsPerRotation;
+    #ifdef DBUG
+    std::cout << stepsPerRotation << " steps per rotation, each step is " << stride << " big and it coveres " << spheres.getEndIndex() << " spheres." << std::endl;
+    #endif // DBUG
+
+    unsigned char stenNum = 0;
+    vec3<float> downGrav(0, -50, 0);
+
+
     while (glfwWindowShouldClose(window)== 0 && glfwGetKey(window, GLFW_KEY_Q) != GLFW_PRESS)//allows window to close on 'q' keypress
     {
 
         auto start = std::chrono::system_clock::now();
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
-         Ray ray(vec3<float>(0.0f,0.0f,-1.0f), vec3<float>(0.0f,0.0f,1.0f));
 
-        for(unsigned short y = 0; y < height; y++)
-            for(unsigned short x = 0; x < width; x++)
+        //What we have here is the intersection stage of the pipeline. There is no renderng here just intersections are tested
+        Ray ray(vec3<float>(0.0f,0.0f,-1.0f), vec3<float>(0.0f,0.0f,1.0f));
+        for(unsigned int idx = 0; idx < width*height; idx++)
+        {
+            unsigned int x = idx % width;
+            unsigned int y = trunc(((float)idx/width));
+
+
+            ray.setOrigin(vec3<float>(x,y,-1.0f));
+            ray.setT(4096);
+            if(pixelObjectMap[((y * width) + x)] != 0xffff)//if the pom is pointing to a valid element in the PAL
+                bool hits = ray.sphereIntersect(spheres.getVec(pixelObjectMap[((y * width) + x)]));
+
+            for(unsigned short sp = stenNum * stride; sp < (stenNum + 1) * stride; sp++)
             {
-                ray.setOrigin(vec3<float>(x,y,-1.0f));
-                ray.setT(9999999999.0f);
-                for(unsigned short sp = 0; sp < spheres.getEndIndex(); sp++)
+                if(sp != pixelObjectMap[((y * width) + x)])//if the current index isnt the thing from last frame which we havn't already checked
                 {
-                    bool hits = ray.sphereIntersect(spheres.getVec(sp));
-                    if(hits)
-                    {
-                        frameBuffer[((y * width) + x) * coloursPerPixel + 0] = spheres.getVec(sp).getColour().getX();
-                        frameBuffer[((y * width) + x) * coloursPerPixel + 1] = spheres.getVec(sp).getColour().getY();
-                        frameBuffer[((y * width) + x) * coloursPerPixel + 2] = spheres.getVec(sp).getColour().getZ();
-
-                    }
+                    if(ray.sphereIntersect(spheres.getVec(sp)))
+                        pixelObjectMap[((y * width) + x)] = sp;//the intersection is noted for rendering later
                 }
-
             }
+        }
+
+        //this is the rendering stage of the pipeline, the intersections previously tested are then rendered here
+        for(unsigned int idx = 0; idx < width*height; idx++)
+        {
+            unsigned int x = idx % width;
+            unsigned int y = trunc(((float)idx/width));
+            unsigned short sp = pixelObjectMap[((y * width) + x)];
+            if(sp != 0xffff)//if the pom is pointing to a valid element in the PAL
+            {
+                frameBuffer[((y * width) + x) * coloursPerPixel + 0] = spheres.getVec(sp).getColour().getX() * 100;
+                frameBuffer[((y * width) + x) * coloursPerPixel + 1] = spheres.getVec(sp).getColour().getY() * 100;
+                frameBuffer[((y * width) + x) * coloursPerPixel + 2] = spheres.getVec(sp).getColour().getZ() * 100;
+            }
+        }
+
+
+
+        if(stenNum >= stepsPerRotation)
+        {
+            stenNum = 0;
+        }
+        else
+        {
+            stenNum++;
+        }
+
 
         glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, frameBuffer);
         /* Swap front and back buffers */

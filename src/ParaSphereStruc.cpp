@@ -42,3 +42,11 @@ sphere ParaSphereStruc::getVec(unsigned long index)
 
     return returnSphere;
 }
+
+
+void ParaSphereStruc::setItem(unsigned long index, sphere s)
+{
+           mPositions.setItem(index, s.getPos());
+           mColours.setItem(index, s.getColour());
+           mRadius.setItem(index, s.getRadius());
+}

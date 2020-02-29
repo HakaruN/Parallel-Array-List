@@ -10,7 +10,16 @@ class sphere
 {
     public:
     sphere(vec3<float> pos, vec3<float> colour, vec1<float> radius);//cnstr
-    sphere(const sphere& other);//cpy cnstr
+
+/*
+    sphere(const sphere& other)//cpy cnstr
+    {
+    //vec3<float> pos = other.getPos();
+    //vec3<float> colour = other.getColour();
+    //vec1<float> radus = other.getRadius();
+    }
+    */
+
     ~sphere();//dstr
 
     void setPos(vec3<float> pos) {mPos = pos;}
@@ -20,8 +29,9 @@ class sphere
     vec3<float> getPos() {return mPos;}
     vec1<float> getRadius() {return mRadius;}
     vec3<float> getColour() {return mColour;}
-
     vec3<float> getNormal(vec3<float> hitPoint);
+
+    void offsetPos(vec3<float> offset){mPos = mPos + offset;}
 
     protected:
 

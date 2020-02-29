@@ -49,6 +49,7 @@
 		</Linker>
 		<Unit filename="include/ParaSphereStruc.h" />
 		<Unit filename="include/parallelArrayList.h" />
+		<Unit filename="include/ray.h" />
 		<Unit filename="include/sphere.h" />
 		<Unit filename="include/vec1.h" />
 		<Unit filename="include/vec1Pal.h" />

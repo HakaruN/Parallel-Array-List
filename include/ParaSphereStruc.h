@@ -16,6 +16,10 @@ class ParaSphereStruc : public parallelArrayList
 
         sphere getVec(unsigned long index);
 
+                //allows for setting/updating information in the data structure
+        void setItem(unsigned long index, sphere s);
+
+
     protected:
         //member variables for the sphere, these are stored in PALs
         vec3Pal<float> mPositions;

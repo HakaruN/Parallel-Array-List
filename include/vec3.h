@@ -17,10 +17,7 @@ class vec3
             mZ = z;
         }
 
-        ~vec3()
-        {
 
-        }
 
         vec3(const vec3& other)
         {

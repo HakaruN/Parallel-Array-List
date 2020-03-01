@@ -20,6 +20,7 @@
 #include <vector>
 #include <math.h>
 #include <thread>
+#include <omp.h>
 
 
 
@@ -90,7 +91,7 @@ int main()
     /* Loop until the user closes the window */
 
     std::srand(std::time(nullptr));//makes a seed for the random func
-    unsigned int nSpheres = 10;
+    unsigned int nSpheres = 15;
     ParaSphereStruc spheres(nSpheres);//declare a structure to hold 1000 spheres
 
 
@@ -115,15 +116,37 @@ int main()
 
     std::ofstream ofs("fpslog", std::ofstream::out);
 
-    int stepsPerRotation = 2;
+    unsigned int stepsPerRotation = 3;
     int stride = spheres.getEndIndex() / stepsPerRotation;
     unsigned char stepNum = 0;
 
-    vec3<float> downGrav(0, -5, 0);
+    vec3<float> downGrav(0, -10, 0);
 
     while (glfwWindowShouldClose(window)== 0 && glfwGetKey(window, GLFW_KEY_Q) != GLFW_PRESS)//allows window to close on 'q' keypress
     {
         auto start = std::chrono::system_clock::now();
+
+
+        //this is the simulation stage of the sim
+
+        //for(unsigned long sp = 0; sp < spheres.getEndIndex(); sp++)
+        for(unsigned short spIdx = stepNum * stride; spIdx < (stepNum + 1) * stride; spIdx++)
+        {
+            vec3<float> newVec = spheres.getVec(spIdx).getPos();
+            if(newVec.getY() < 0)
+                newVec.setY(height);
+            //std::cout << "X: " << newVec.getX() << " Y:" << newVec.getY() << std::endl;
+            newVec.setX(newVec.getX() + downGrav.getX());
+            newVec.setY(newVec.getY() + downGrav.getY());
+            newVec.setZ(newVec.getZ() + downGrav.getZ());
+            //std::cout << "updatng vec" << std::endl;
+
+            //std::cout << "X: " << newVec.getX() << " Y:" << newVec.getY() << std::endl << std::endl;
+
+            spheres.setPos(spIdx, newVec);
+            //std::cout << "Settng pos" << std::endl;
+        }
+
         for(unsigned short y = 0; y < height; y++)
             for(unsigned short x = 0; x < width; x++)
             {
@@ -137,7 +160,10 @@ int main()
 
         //What we have here is the intersection stage of the pipeline. There is no renderng here just intersections are tested
         Ray ray(vec3<float>(0.0f,0.0f,-1.0f), vec3<float>(0.0f,0.0f,1.0f));
+
+
         for(unsigned short y = 0; y < height; y++)
+            //#pragma omp parallel
             for(unsigned short x = 0; x < width; x++)
             {
                 //adjust the rays origin to be the new pixel position
@@ -146,32 +172,30 @@ int main()
                 ray.setT(4096);
 
 
-                unsigned long objectIndex = ((y * width) + x);//the pixel coords that will be the index into the POM
+                unsigned long pixelIndex = ((y * width) + x);//the pixel coords that will be the index into the POM
 
                 bool hasIntersection = false;//this will tell if a pixel has had an intersction this frame
-                if(pixelObjectMap[objectIndex] != 0xffff)//if last frame resulted on a map between a geometry and this pixel
+                if(pixelObjectMap[pixelIndex] != 0xffff)//if last frame resulted on a map between a geometry and this pixel
                 {//then we can see if the piece of geometry is still there
-                    if(ray.sphereIntersect(spheres.getVec(pixelObjectMap[objectIndex])))
+                    if(ray.sphereIntersect(spheres.getVec(pixelObjectMap[pixelIndex])))
                         hasIntersection = true;
                 }
 
                 //lets iterate through the spheres in the sphere list, so for every sphere...
-                //for(unsigned short spIdx = stepNum * stride; spIdx < (stepNum + 1) * stride; spIdx++)
                 //for(unsigned short spIdx = 0; spIdx < spheres.getEndIndex(); spIdx++)
                 for(unsigned short spIdx = stepNum * stride; spIdx < (stepNum + 1) * stride; spIdx++)
                 {
-                    if(spIdx != pixelObjectMap[objectIndex])//if the current index isnt the thing from last frame which we havn't already checked
+                    if(spIdx != pixelObjectMap[pixelIndex])//if the current index isnt the thing from last frame which we just checked
                     {
-
                         if(ray.sphereIntersect(spheres.getVec(spIdx)))
                         {
-                            pixelObjectMap[objectIndex] = spIdx;//the intersection is noted for rendering later
+                            pixelObjectMap[pixelIndex] = spIdx;//the intersection is noted for rendering later
                             hasIntersection = true;
                         }
                     }
                 }
-                if(!hasIntersection)
-                    pixelObjectMap[objectIndex] = 0xffff;
+                if(!hasIntersection)//if there was nothing in there then we set the pom for this pixel to no detected objects
+                    pixelObjectMap[pixelIndex] = 0xffff;
             }
 
 
@@ -179,37 +203,16 @@ int main()
         for(unsigned short y = 0; y < height; y++)
             for(unsigned short x = 0; x < width; x++)
             {
-                unsigned long objectIndex = ((y * width) + x);
-                unsigned short sp = pixelObjectMap[objectIndex];
-                if(sp != 0xffff)//if the pom is pointing to a valid element in the PAL
+                unsigned long pixelIndex = ((y * width) + x);
+                unsigned short spID = pixelObjectMap[pixelIndex];
+                if(spID != 0xffff)//if the pom is pointing to a valid element in the PAL
                 {
-                    frameBuffer[((y * width) + x) * coloursPerPixel + 0] = spheres.getVec(sp).getColour().getX() * 100;
-                    frameBuffer[((y * width) + x) * coloursPerPixel + 1] = spheres.getVec(sp).getColour().getY() * 100;
-                    frameBuffer[((y * width) + x) * coloursPerPixel + 2] = spheres.getVec(sp).getColour().getZ() * 100;
+                    frameBuffer[((y * width) + x) * coloursPerPixel + 0] = spheres.getVec(spID).getColour().getX() * 100;
+                    frameBuffer[((y * width) + x) * coloursPerPixel + 1] = spheres.getVec(spID).getColour().getY() * 100;
+                    frameBuffer[((y * width) + x) * coloursPerPixel + 2] = spheres.getVec(spID).getColour().getZ() * 100;
                 }
             }
 
-        //this is the simulation stage of the sim
-
-        for(unsigned long sp = 0; sp < spheres.getEndIndex(); sp++)
-        {
-            vec3<float> newVec = spheres.getVec(sp).getPos();
-            if(newVec.getY() < 0)
-                newVec.setY(height);
-            //std::cout << "X: " << newVec.getX() << " Y:" << newVec.getY() << std::endl;
-            newVec.setX(newVec.getX() + downGrav.getX());
-            newVec.setY(newVec.getY() + downGrav.getY());
-            newVec.setZ(newVec.getZ() + downGrav.getZ());
-            //std::cout << "updatng vec" << std::endl;
-
-            //std::cout << "X: " << newVec.getX() << " Y:" << newVec.getY() << std::endl << std::endl;
-
-            spheres.setPos(sp, newVec);
-            //std::cout << "Settng pos" << std::endl;
-
-
-
-        }
 
 
 

@@ -36,6 +36,7 @@
 			<Add option="-lGL" />
 		</Compiler>
 		<Linker>
+			<Add option="-fopenmp" />
 			<Add option="-lGLEW" />
 			<Add option="-lGLU" />
 			<Add option="-lGL" />

@@ -13,7 +13,7 @@ class ParaSphereStruc : public parallelArrayList
         void addItem(vec3<float> pos, vec3<float> colour, vec1<float> radius);
         void addItem(sphere s);
 
-        sphere getVec(unsigned long index);
+        sphere getSphere(unsigned long index);
 
                 //allows for setting/updating information in the data structure
         void setItem(unsigned long index, sphere s);

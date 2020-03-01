@@ -91,7 +91,7 @@ int main()
     /* Loop until the user closes the window */
 
     std::srand(std::time(nullptr));//makes a seed for the random func
-    unsigned int nSpheres = 10;
+    unsigned int nSpheres = 5;
     ParaSphereStruc spheres(nSpheres);//declare a structure to hold 1000 spheres
 
 
@@ -117,7 +117,7 @@ int main()
     std::ofstream ofs("fpslog", std::ofstream::out);
 
     unsigned int numberOfSpheres = spheres.getEndIndex();
-    unsigned int stepsPerRotation = 4;
+    unsigned int stepsPerRotation = 5;
     if(stepsPerRotation > nSpheres)
     {
         std::cerr << "Error, steps per rotation cannot be more than the number of spheres, setting steps per rotation to number of sphears" << std::endl;
@@ -134,26 +134,20 @@ int main()
 
 
         //this is the simulation stage of the sim
-
-        //for(unsigned long sp = 0; sp < spheres.getEndIndex(); sp++)
         for(unsigned short spIdx = stepNum * stride; spIdx < (stepNum + 1) * stride; spIdx++)
         {
-            vec3<float> newVec = spheres.getVec(spIdx).getPos();
+            vec3<float> newVec = spheres.getSphere(spIdx).getPos();
             if(newVec.getY() < 0)
                 newVec.setY(height);
-            //std::cout << "X: " << newVec.getX() << " Y:" << newVec.getY() << std::endl;
+
             newVec.setX(newVec.getX() + downGrav.getX());
             newVec.setY(newVec.getY() + downGrav.getY());
             newVec.setZ(newVec.getZ() + downGrav.getZ());
-            //std::cout << "updatng vec" << std::endl;
-
-            //std::cout << "X: " << newVec.getX() << " Y:" << newVec.getY() << std::endl << std::endl;
-
             spheres.setPos(spIdx, newVec);
-            //std::cout << "Settng pos" << std::endl;
         }
 
         //clear the frame buffer
+        #pragma omp parallel for
         for(unsigned short y = 0; y < height; y++)
             for(unsigned short x = 0; x < width; x++)
             {
@@ -166,14 +160,12 @@ int main()
 
 
         //What we have here is the intersection stage of the pipeline. There is no renderng here just intersections are tested
-        Ray ray(vec3<float>(0.0f,0.0f,-1.0f), vec3<float>(0.0f,0.0f,1.0f));
-
-
+        #pragma omp parallel for
         for(unsigned short y = 0; y < height; y++)
         {
-            //#pragma omp parallel
             for(unsigned short x = 0; x < width; x++)
             {
+                Ray ray(vec3<float>(0.0f,0.0f,-1.0f), vec3<float>(0.0f,0.0f,1.0f));
                 //adjust the rays origin to be the new pixel position
                 ray.setOrigin(vec3<float>(x,y,-1.0f));
                 //set the T value for the comming intersections, this will be the max visible range and set to a power of 2 as it may be faster idk
@@ -185,7 +177,7 @@ int main()
                 bool hasIntersection = false;//this will tell if a pixel has had an intersction this frame
                 if(pixelObjectMap[pixelIndex] != 0xffff)//if last frame resulted on a map between a geometry and this pixel
                 {//then we can see if the piece of geometry is still there
-                    if(ray.sphereIntersect(spheres.getVec(pixelObjectMap[pixelIndex])))
+                    if(ray.sphereIntersect(spheres.getSphere(pixelObjectMap[pixelIndex])))
                         hasIntersection = true;
 
                 //if we know what was intersected last frame then we can temporaly clip out some spheres
@@ -194,7 +186,7 @@ int main()
                     if(spIdx <= numberOfSpheres)
                         if(spIdx != pixelObjectMap[pixelIndex])//if the current index isnt the thing from last frame which we just checked
                         {
-                            if(ray.sphereIntersect(spheres.getVec(spIdx)))
+                            if(ray.sphereIntersect(spheres.getSphere(spIdx)))
                             {
                                 pixelObjectMap[pixelIndex] = spIdx;//the intersection is noted for rendering later
                                 hasIntersection = true;
@@ -210,7 +202,7 @@ int main()
                     for(unsigned short spIdx = 0; spIdx < numberOfSpheres; spIdx++)
                     {
                         if(spIdx <= numberOfSpheres)
-                            if(ray.sphereIntersect(spheres.getVec(spIdx)))
+                            if(ray.sphereIntersect(spheres.getSphere(spIdx)))
                             {
                                 pixelObjectMap[pixelIndex] = spIdx;//the intersection is noted for rendering later
                                 hasIntersection = true;
@@ -222,6 +214,7 @@ int main()
 
 
         //this is the rendering stage of the pipeline, the intersections previously tested are then rendered here
+        #pragma omp parallel for
         for(unsigned short y = 0; y < height; y++)
             for(unsigned short x = 0; x < width; x++)
             {
@@ -229,9 +222,9 @@ int main()
                 unsigned short spID = pixelObjectMap[pixelIndex];
                 if(spID != 0xffff)//if the pom is pointing to a valid element in the PAL
                 {
-                    frameBuffer[((y * width) + x) * coloursPerPixel + 0] = spheres.getVec(spID).getColour().getX() * 100;
-                    frameBuffer[((y * width) + x) * coloursPerPixel + 1] = spheres.getVec(spID).getColour().getY() * 100;
-                    frameBuffer[((y * width) + x) * coloursPerPixel + 2] = spheres.getVec(spID).getColour().getZ() * 100;
+                    frameBuffer[((y * width) + x) * coloursPerPixel + 0] = spheres.getSphere(spID).getColour().getX() * 100;
+                    frameBuffer[((y * width) + x) * coloursPerPixel + 1] = spheres.getSphere(spID).getColour().getY() * 100;
+                    frameBuffer[((y * width) + x) * coloursPerPixel + 2] = spheres.getSphere(spID).getColour().getZ() * 100;
                 }
             }
 

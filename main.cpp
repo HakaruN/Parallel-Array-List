@@ -91,7 +91,7 @@ int main()
     /* Loop until the user closes the window */
 
     std::srand(std::time(nullptr));//makes a seed for the random func
-    unsigned int nSpheres = 5;
+    unsigned int nSpheres = 10;
     ParaSphereStruc spheres(nSpheres);//declare a structure to hold 1000 spheres
 
 
@@ -116,8 +116,14 @@ int main()
 
     std::ofstream ofs("fpslog", std::ofstream::out);
 
-    unsigned int stepsPerRotation = 5;
-    int stride = spheres.getEndIndex() / stepsPerRotation;
+    unsigned int numberOfSpheres = spheres.getEndIndex();
+    unsigned int stepsPerRotation = 4;
+    if(stepsPerRotation > nSpheres)
+    {
+        std::cerr << "Error, steps per rotation cannot be more than the number of spheres, setting steps per rotation to number of sphears" << std::endl;
+        stepsPerRotation = nSpheres;
+    }
+    int stride = numberOfSpheres / stepsPerRotation;
     unsigned char stepNum = 0;
 
     vec3<float> downGrav(0, -10, 0);
@@ -164,6 +170,7 @@ int main()
 
 
         for(unsigned short y = 0; y < height; y++)
+        {
             //#pragma omp parallel
             for(unsigned short x = 0; x < width; x++)
             {
@@ -184,14 +191,15 @@ int main()
                 //if we know what was intersected last frame then we can temporaly clip out some spheres
                 for(unsigned short spIdx = stepNum * stride; spIdx < (stepNum + 1) * stride; spIdx++)
                 {
-                    if(spIdx != pixelObjectMap[pixelIndex])//if the current index isnt the thing from last frame which we just checked
-                    {
-                        if(ray.sphereIntersect(spheres.getVec(spIdx)))
+                    if(spIdx <= numberOfSpheres)
+                        if(spIdx != pixelObjectMap[pixelIndex])//if the current index isnt the thing from last frame which we just checked
                         {
-                            pixelObjectMap[pixelIndex] = spIdx;//the intersection is noted for rendering later
-                            hasIntersection = true;
+                            if(ray.sphereIntersect(spheres.getVec(spIdx)))
+                            {
+                                pixelObjectMap[pixelIndex] = spIdx;//the intersection is noted for rendering later
+                                hasIntersection = true;
+                            }
                         }
-                    }
                 }
                 if(!hasIntersection)//if there was nothing in there then we set the pom for this pixel to no detected objects
                     pixelObjectMap[pixelIndex] = 0xffff;
@@ -199,18 +207,18 @@ int main()
                 }
                 else//if there the was nothing last frame then we must check all spheres
                 {
-                    for(unsigned short spIdx = 0; spIdx < spheres.getEndIndex(); spIdx++)
+                    for(unsigned short spIdx = 0; spIdx < numberOfSpheres; spIdx++)
                     {
-                        if(ray.sphereIntersect(spheres.getVec(spIdx)))
-                        {
-                            pixelObjectMap[pixelIndex] = spIdx;//the intersection is noted for rendering later
-                            hasIntersection = true;
-                        }
+                        if(spIdx <= numberOfSpheres)
+                            if(ray.sphereIntersect(spheres.getVec(spIdx)))
+                            {
+                                pixelObjectMap[pixelIndex] = spIdx;//the intersection is noted for rendering later
+                                hasIntersection = true;
+                            }
                     }
                 }
-
-
             }
+        }
 
 
         //this is the rendering stage of the pipeline, the intersections previously tested are then rendered here

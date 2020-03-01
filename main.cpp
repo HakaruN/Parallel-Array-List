@@ -26,8 +26,8 @@
 
 int main()
 {
-    const unsigned short width = 800;
-    const unsigned short height = 600;
+    const unsigned short width = 600;
+    const unsigned short height = 400;
     const unsigned char coloursPerPixel = 3;
 
     unsigned char* frameBuffer = new unsigned char[width * height * coloursPerPixel];
@@ -91,7 +91,7 @@ int main()
     /* Loop until the user closes the window */
 
     std::srand(std::time(nullptr));//makes a seed for the random func
-    unsigned int nSpheres = 15;
+    unsigned int nSpheres = 5;
     ParaSphereStruc spheres(nSpheres);//declare a structure to hold 1000 spheres
 
 
@@ -116,7 +116,7 @@ int main()
 
     std::ofstream ofs("fpslog", std::ofstream::out);
 
-    unsigned int stepsPerRotation = 3;
+    unsigned int stepsPerRotation = 5;
     int stride = spheres.getEndIndex() / stepsPerRotation;
     unsigned char stepNum = 0;
 
@@ -147,6 +147,7 @@ int main()
             //std::cout << "Settng pos" << std::endl;
         }
 
+        //clear the frame buffer
         for(unsigned short y = 0; y < height; y++)
             for(unsigned short x = 0; x < width; x++)
             {
@@ -179,10 +180,8 @@ int main()
                 {//then we can see if the piece of geometry is still there
                     if(ray.sphereIntersect(spheres.getVec(pixelObjectMap[pixelIndex])))
                         hasIntersection = true;
-                }
 
-                //lets iterate through the spheres in the sphere list, so for every sphere...
-                //for(unsigned short spIdx = 0; spIdx < spheres.getEndIndex(); spIdx++)
+                //if we know what was intersected last frame then we can temporaly clip out some spheres
                 for(unsigned short spIdx = stepNum * stride; spIdx < (stepNum + 1) * stride; spIdx++)
                 {
                     if(spIdx != pixelObjectMap[pixelIndex])//if the current index isnt the thing from last frame which we just checked
@@ -196,6 +195,21 @@ int main()
                 }
                 if(!hasIntersection)//if there was nothing in there then we set the pom for this pixel to no detected objects
                     pixelObjectMap[pixelIndex] = 0xffff;
+
+                }
+                else//if there the was nothing last frame then we must check all spheres
+                {
+                    for(unsigned short spIdx = 0; spIdx < spheres.getEndIndex(); spIdx++)
+                    {
+                        if(ray.sphereIntersect(spheres.getVec(spIdx)))
+                        {
+                            pixelObjectMap[pixelIndex] = spIdx;//the intersection is noted for rendering later
+                            hasIntersection = true;
+                        }
+                    }
+                }
+
+
             }
 
 
@@ -215,8 +229,8 @@ int main()
 
 
 
-
-        if(stepNum >= stepsPerRotation)
+        //because the index is 0'th based then we need to check agaisnt stepts per rotation -1 at number of steps is 1'th based
+        if(stepNum >= stepsPerRotation -1)
         {
             stepNum = 0;
         }

@@ -1,6 +1,8 @@
 #include "include/ParaSphereStruc.h"
 #include "include/sphere.h"
 
+#include "include/matrix.h"
+
 #include "include/vec1Pal.h"
 #include "include/vec2Pal.h"
 #include "include/vec3Pal.h"
@@ -29,12 +31,13 @@ int main()
     const unsigned short width = 600;
     const unsigned short height = 400;
     const unsigned char coloursPerPixel = 3;
+    const float invWidth = 1.0f / width;
 
     unsigned char* frameBuffer = new unsigned char[width * height * coloursPerPixel];
     unsigned short* pixelObjectMap = new unsigned short[width * height];
 
 
-     for(unsigned short y = 0; y < height; y++)
+     for(unsigned short y = height - 1; y > 0; --y)
         for(unsigned short x = 0; x < width; x++)
         {
             frameBuffer[((y * width) + x) * coloursPerPixel + 0] = 0;
@@ -80,18 +83,16 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);//dont want old openGL
 
-
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);//setting texture repeate mode
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//texture filtering
-
 
 
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);//ensure we can capture keypresses
     /* Loop until the user closes the window */
 
     std::srand(std::time(nullptr));//makes a seed for the random func
-    unsigned int nSpheres = 5;
+    unsigned int nSpheres = 20;
     ParaSphereStruc spheres(nSpheres);//declare a structure to hold 1000 spheres
 
 
@@ -117,7 +118,7 @@ int main()
     std::ofstream ofs("fpslog", std::ofstream::out);
 
     unsigned int numberOfSpheres = spheres.getEndIndex();
-    unsigned int stepsPerRotation = 5;
+    unsigned int stepsPerRotation = 20;
     if(stepsPerRotation > nSpheres)
     {
         std::cerr << "Error, steps per rotation cannot be more than the number of spheres, setting steps per rotation to number of sphears" << std::endl;
@@ -134,6 +135,7 @@ int main()
 
 
         //this is the simulation stage of the sim
+        #pragma omp parallel for
         for(unsigned short spIdx = stepNum * stride; spIdx < (stepNum + 1) * stride; spIdx++)
         {
             vec3<float> newVec = spheres.getSphere(spIdx).getPos();
@@ -148,7 +150,7 @@ int main()
 
         //clear the frame buffer
         #pragma omp parallel for
-        for(unsigned short y = 0; y < height; y++)
+        for(unsigned short y = height - 1; y > 0; --y)
             for(unsigned short x = 0; x < width; x++)
             {
                 frameBuffer[((y * width) + x) * coloursPerPixel + 0] = 0;
@@ -161,7 +163,7 @@ int main()
 
         //What we have here is the intersection stage of the pipeline. There is no renderng here just intersections are tested
         #pragma omp parallel for
-        for(unsigned short y = 0; y < height; y++)
+        for(unsigned short y = height - 1; y > 0; --y)
         {
             for(unsigned short x = 0; x < width; x++)
             {
@@ -170,7 +172,6 @@ int main()
                 ray.setOrigin(vec3<float>(x,y,-1.0f));
                 //set the T value for the comming intersections, this will be the max visible range and set to a power of 2 as it may be faster idk
                 ray.setT(4096);
-
 
                 unsigned long pixelIndex = ((y * width) + x);//the pixel coords that will be the index into the POM
 
@@ -212,10 +213,9 @@ int main()
             }
         }
 
-
         //this is the rendering stage of the pipeline, the intersections previously tested are then rendered here
         #pragma omp parallel for
-        for(unsigned short y = 0; y < height; y++)
+        for(unsigned short y = height - 1; y > 0; --y)
             for(unsigned short x = 0; x < width; x++)
             {
                 unsigned long pixelIndex = ((y * width) + x);
@@ -228,8 +228,6 @@ int main()
                 }
             }
 
-
-
         //because the index is 0'th based then we need to check agaisnt stepts per rotation -1 at number of steps is 1'th based
         if(stepNum >= stepsPerRotation -1)
         {
@@ -239,7 +237,6 @@ int main()
         {
             stepNum++;
         }
-
 
         glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, frameBuffer);
         /* Swap front and back buffers */
@@ -255,10 +252,6 @@ int main()
 
     ofs.close();
     glfwTerminate();
-
-
-
-
 
     delete [] frameBuffer;
     delete [] pixelObjectMap;

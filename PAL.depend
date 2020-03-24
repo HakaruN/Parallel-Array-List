@@ -52,7 +52,7 @@
 1582997163 source:/home/hakaru/Projecs/PAL/src/sphere.cpp
 	"../include/sphere.h"
 
-1583176263 source:/home/hakaru/Projecs/PAL/main.cpp
+1583499864 source:/home/hakaru/Projecs/PAL/main.cpp
 	"include/ParaSphereStruc.h"
 	"include/sphere.h"
 	"include/matrix.h"
@@ -103,5 +103,6 @@
 	<GL/glext.h>
 	<GL/glu.h>
 
-1583178711 /home/hakaru/Projecs/PAL/include/matrix.h
+1583501070 /home/hakaru/Projecs/PAL/include/matrix.h
+	<iostream>
 

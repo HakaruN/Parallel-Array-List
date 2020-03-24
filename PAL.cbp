@@ -30,6 +30,7 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-fopenmp" />
 			<Add option="-fexceptions" />
 			<Add option="-lpthread" />
 			<Add option="-lGLEW" />

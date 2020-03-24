@@ -36,6 +36,17 @@ int main()
     unsigned char* frameBuffer = new unsigned char[width * height * coloursPerPixel];
     unsigned short* pixelObjectMap = new unsigned short[width * height];
 
+    float a[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    float b[9] = {9, 8, 7, 6, 5, 4, 3, 2, 1};
+
+    matrix A(a, 9, 3);
+    matrix B(b, 9, 3);
+
+    matrix C = A.matrixMul(B);
+
+    for(unsigned char i = 0; i < 9; i++)
+        std::cout << C.getElement(i) << std::endl;
+
 
      for(unsigned short y = height - 1; y > 0; --y)
         for(unsigned short x = 0; x < width; x++)
@@ -47,7 +58,6 @@ int main()
             //this value is used as an index to the last element rendered to this pixel in the PAL containing geometry
             pixelObjectMap[((y * width) + x)] = 0xffff;
         }
-
 
 
     #ifdef DEBUG
@@ -92,7 +102,7 @@ int main()
     /* Loop until the user closes the window */
 
     std::srand(std::time(nullptr));//makes a seed for the random func
-    unsigned int nSpheres = 20;
+    unsigned int nSpheres = 10;
     ParaSphereStruc spheres(nSpheres);//declare a structure to hold 1000 spheres
 
 

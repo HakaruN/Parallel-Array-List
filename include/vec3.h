@@ -36,7 +36,8 @@ class vec3
         {
             float magnitude = (float)sqrt(
             mX * mX +
-            mY * mY
+            mY * mY +
+            mZ * mZ
             );
             return(vec3<T>(
             mX / magnitude,
